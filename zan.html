@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materi Pascal: Array & Record - [cita: 1]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f111a;
+            --card-bg: #1a1d2d;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --code-bg: #1e1e1e;
+            --border-color: #2d3142;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 1.5rem;
+        }
+
+        .container { max-width: 900px; margin: 0 auto; }
+
+        header {
+            text-align: center; margin-bottom: 2.5rem; padding: 1.5rem;
+            background: linear-gradient(135deg, var(--card-bg), #131520);
+            border-radius: 12px; border: 1px solid var(--border-color);
+        }
+
+        h1 {
+            font-size: 2.2rem; margin-bottom: 0.5rem;
+            background: linear-gradient(to right, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle { color: var(--text-muted); font-size: 1rem; }
+
+        .module {
+            background-color: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 10px; padding: 1.5rem; margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .module h2 {
+            color: var(--accent-blue); margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;
+        }
+
+        .content-text { margin-bottom: 1rem; }
+        .content-text p { margin-bottom: 0.8rem; color: var(--text-main); }
+        .content-text ul { margin-left: 1.5rem; margin-bottom: 1rem; color: var(--text-muted); }
+
+        .tabs { background-color: #151722; border-radius: 8px; border: 1px solid var(--border-color); overflow: hidden; }
+        .tab-buttons { display: flex; background-color: #0f111a; border-bottom: 1px solid var(--border-color); }
+
+        .tab-btn {
+            background: none; border: none; color: var(--text-muted);
+            padding: 1rem 1.25rem; cursor: pointer; font-size: 0.9rem;
+            font-family: 'Inter', sans-serif; font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover { color: var(--text-main); background-color: rgba(255,255,255,0.05); }
+        .tab-btn.active { color: var(--accent-purple); border-bottom: 2px solid var(--accent-purple); background-color: #151722; }
+
+        .tab-content { display: none; padding: 0; margin: 0; }
+        .tab-content.active { display: block; }
+
+        pre {
+            background-color: var(--code-bg); padding: 1.25rem;
+            overflow-x: auto; font-family: 'Fira Code', monospace;
+            font-size: 0.85rem; color: #d4d4d4; margin: 0; border-radius: 0 0 8px 8px;
+        }
+
+        code .kw { color: #569cd6; } /* Keywords */
+        code .type { color: #4ec9b0; } /* Types */
+        code .str { color: #ce9178; } /* Strings */
+        code .cmt { color: #6a9955; font-style: italic; } /* Comments */
+        
+        .cite { font-size: 0.7rem; color: var(--accent-blue); vertical-align: super; }
+
+        @media (max-width: 600px) {
+            body { padding: 1rem; }
+            h1 { font-size: 1.8rem; }
+            .tab-buttons { flex-direction: column; }
+            .tab-btn { padding: 0.75rem 1rem; text-align: left; }
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Algoritma & Pemrograman IIA</h1>
+        <p class="subtitle">Bab 7: Struktur Data Array dan Record dalam Pascal</p>
+    </header>
+
+    <!-- MODULE 1: ARRAY -->
+    <section class="module">
+        <h2>1. Konsep Dasar Array</h2>
+        <div class="content-text">
+            <p>Array didefinisikan sebagai kumpulan data item yang masing-masing mempunyai jenis data berbeda<span class="cite">[cite: 1, 2]</span>. Elemen array bersifat homogen, yaitu semua elemennya memiliki tipe data yang sama<span class="cite">[cite: 2, 5]</span>.</p>
+            <ul>
+                <li><strong>Array Dimensi Satu:</strong> Dapat dikatakan sebagai suatu daftar yang linier atau sebuah kolom<span class="cite">[cite: 3]</span>.</li>
+                <li><strong>Array Multi Dimensi (Contoh: Dimensi Dua):</strong> Dapat dianggap sebagai sebuah matriks yang jumlah kolomnya lebih dari satu<span class="cite">[cite: 6]</span>.</li>
+            </ul>
+        </div>
+
+        <div class="tabs">
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="openTab(event, 'arr-1d', 'tabgroup1')">Deklarasi 1 Dimensi</button>
+                <button class="tab-btn" onclick="openTab(event, 'arr-2d', 'tabgroup1')">Deklarasi Multi Dimensi</button>
+            </div>
+            <div id="arr-1d" class="tab-content active tabgroup1">
+<pre><code><span class="cmt">{ Bentuk Umum Deklarasi Array 1 Dimensi }</span>
+<span class="kw">VAR</span> nama_array : <span class="kw">ARRAY</span> [index] <span class="kw">OF</span> jenis_elemen; <span class="cite">[cite: 4]</span>
+
+<span class="cmt">{ Contoh }</span>
+<span class="kw">VAR</span> x : <span class="kw">ARRAY</span> [1..10] <span class="kw">OF</span> <span class="type">integer</span>; <span class="cite">[cite: 5]</span></code></pre>
+            </div>
+            <div id="arr-2d" class="tab-content tabgroup1">
+<pre><code><span class="cmt">{ Bentuk Umum Deklarasi Array 2 Dimensi }</span>
+<span class="kw">VAR</span> nama_array : <span class="kw">ARRAY</span> [indeks_baris, indeks_kolom] <span class="kw">OF</span> jenis; <span class="cite">[cite: 7]</span>
+
+<span class="cmt">{ Contoh: Matriks 3 Baris, 4 Kolom }</span>
+<span class="kw">VAR</span> A : <span class="kw">ARRAY</span> [1..3, 1..4] <span class="kw">OF</span> <span class="type">integer</span>; <span class="cite">[cite: 8, 9]</span></code></pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- MODULE 2: MEMPROSES ARRAY -->
+    <section class="module">
+        <h2>2. Memproses Array</h2>
+        <div class="content-text">
+            <p>Untuk keperluan membaca variabel array (input) kita tidak bisa melakukan seperti sebuah data bernilai tunggal, yaitu <code>READ(X)</code><span class="cite">[cite: 11]</span>. Kita harus membaca elemen-elemen array tersebut<span class="cite">[cite: 12]</span>.</p>
+            <p>Untuk itu diperlukan suatu bentuk perulangan<span class="cite">[cite: 13]</span>. Demikian pula halnya untuk keperluan memproses elemen-elemennya, harus ditunjukkan elemen yang akan diproses<span class="cite">[cite: 14]</span>.</p>
+        </div>
+
+        <div class="tabs">
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="openTab(event, 'prog-max', 'tabgroup2')">Program Cari Maksimum</button>
+                <button class="tab-btn" onclick="openTab(event, 'prog-avg', 'tabgroup2')">Program Hitung Rata-rata</button>
+            </div>
+            <div id="prog-max" class="tab-content active tabgroup2">
+<pre><code><span class="cmt">{ Tentukan integer terbesar dari 10 bilangan dalam array B }</span><span class="cite">[cite: 15]</span>
+<span class="kw">PROGRAM</span> MAKS;
+<span class="kw">VAR</span> 
+  B : <span class="kw">ARRAY</span> [1..10] <span class="kw">OF</span> <span class="type">integer</span>;
+  I, J, MAX : <span class="type">integer</span>; <span class="cite">[cite: 16]</span>
+
+<span class="kw">BEGIN</span>
+  <span class="kw">FOR</span> I := 1 <span class="kw">TO</span> 10 <span class="kw">DO</span> READ(B[I]);
+  MAX := B[1]; <span class="cmt">{ Inisialisasi awal dengan elemen pertama }</span> <span class="cite">[cite: 17]</span>
+
+  <span class="kw">FOR</span> J := 2 <span class="kw">TO</span> 10 <span class="kw">DO</span>
+    <span class="kw">IF</span> MAX <= B[J] <span class="kw">THEN</span> MAX := B[J];
+  
+  WRITE(MAX); <span class="cite">[cite: 18]</span>
+<span class="kw">END</span>.</code></pre>
+            </div>
+            <div id="prog-avg" class="tab-content tabgroup2">
+<pre><code><span class="cmt">{ Menghitung rata-rata dari 10 bilangan }</span><span class="cite">[cite: 19]</span>
+<span class="kw">PROGRAM</span> RATA_RATA;
+<span class="kw">TYPE</span> INDEKS = 1..10;
+<span class="kw">VAR</span> 
+  A : <span class="kw">ARRAY</span> [INDEKS] <span class="kw">OF</span> <span class="type">INTEGER</span>; <span class="cite">[cite: 20]</span>
+  I, TOTAL : <span class="type">INTEGER</span>;
+  RATA2 : <span class="type">REAL</span>; <span class="cite">[cite: 21]</span>
+
+<span class="kw">BEGIN</span>
+  TOTAL := 0;
+  <span class="kw">FOR</span> I := 1 <span class="kw">TO</span> 10 <span class="kw">DO</span>
+  <span class="kw">BEGIN</span>
+    READ(A[I]); <span class="cite">[cite: 22]</span>
+    TOTAL := TOTAL + A[I];
+  <span class="kw">END</span>;
+
+  RATA2 := TOTAL / 10;
+  WRITE(RATA2); <span class="cite">[cite: 23]</span>
+<span class="kw">END</span>.</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- MODULE 3: RECORD -->
+    <section class="module">
+        <h2>3. Konsep Dasar Record</h2>
+        <div class="content-text">
+            <p>Record dapat dikatakan sebagai kumpulan data item yang masing-masing mempunyai jenis data berbeda<span class="cite">[cite: 24]</span>. Data item yang merupakan elemen record biasanya disebut dengan FIELD<span class="cite">[cite: 25]</span>.</p>
+        </div>
+
+        <div class="tabs">
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="openTab(event, 'rec-dec', 'tabgroup3')">Cara Deklarasi Record</button>
+            </div>
+            <div id="rec-dec" class="tab-content active tabgroup3">
+<pre><code><span class="cmt">{ Bentuk Umum Deklarasi Variabel Berjenis Record }</span><span class="cite">[cite: 26]</span>
+<span class="kw">VAR</span> nama_record : <span class="kw">RECORD</span>
+    Nama_field_1 : jenis; <span class="cite">[cite: 26]</span>
+    Nama_field_2 : jenis;
+<span class="kw">END</span>; <span class="cite">[cite: 27]</span>
+
+<span class="cmt">{ Contoh }</span>
+<span class="kw">TYPE</span> date = <span class="kw">RECORD</span>
+    Tanggal : 1..31;
+    Bulan   : 1..12; <span class="cite">[cite: 29]</span>
+    Tahun   : 1900..2000;
+<span class="kw">END</span>; <span class="cite">[cite: 30]</span>
+<span class="kw">VAR</span> event1, event2 : <span class="kw">ARRAY</span> [1..10] <span class="kw">OF</span> date; <span class="cite">[cite: 30]</span></code></pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- MODULE 4: MEMPROSES RECORD -->
+    <section class="module">
+        <h2>4. Memproses Record & Statement WITH</h2>
+        <div class="content-text">
+            <p>Untuk memproses variabel berjenis record, dilakukan dengan menyebutkan field designatornya: <code>Nama_record.nama_field</code><span class="cite">[cite: 34]</span>.</p>
+            <p>Selain cara tersebut, untuk memproses suatu record dapat digunakan statement <strong>WITH</strong>. Dengan statement ini penulisannya akan lebih sederhana<span class="cite">[cite: 39, 40]</span>. Bentuk umum penulisan statement WITH adalah: <code>WITH nama_record DO statement</code><span class="cite">[cite: 40]</span>.</p>
+        </div>
+
+        <div class="tabs">
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="openTab(event, 'rec-proc', 'tabgroup4')">Contoh Biasa (Tanpa WITH)</button>
+                <button class="tab-btn" onclick="openTab(event, 'rec-with', 'tabgroup4')">Contoh Memakai WITH</button>
+            </div>
+            <div id="rec-proc" class="tab-content active tabgroup4">
+<pre><code><span class="cmt">{ Penjumlahan dua bilangan kompleks }</span><span class="cite">[cite: 35]</span>
+<span class="kw">PROGRAM</span> contoh;
+<span class="kw">TYPE</span> bk = <span class="kw">RECORD</span>
+    Bag_nyata : <span class="type">integer</span>;
+    Bag_imajiner : <span class="type">integer</span>;
+<span class="kw">END</span>;
+<span class="kw">VAR</span> a, b, c : bk; <span class="cite: 37]</span>
+
+<span class="kw">BEGIN</span>
+  <span class="cmt">{ Membaca input, menyebutkan field satu per satu }</span>
+  READ(a.bag_nyata, a.bag_imajiner, b.bag_nyata, b.bag_imajiner);
+  
+  c.bag_nyata := a.bag_nyata + b.bag_nyata; 
+  c.bag_imajiner := a.bag_imajiner + b.bag_imajiner; <span class="cite">[cite: 38]</span>
+  
+  WRITELN(c.bag_nyata, <span class="str">'+i'</span>, c.bag_imajiner); <span class="cite">[cite: 39]</span>
+<span class="kw">END</span>.</code></pre>
+            </div>
+            <div id="rec-with" class="tab-content tabgroup4">
+<pre><code><span class="cmt">{ Contoh Membaca Variabel Berjenis Record dengan WITH }</span><span class="cite">[cite: 40]</span>
+<span class="kw">TYPE</span> x = <span class="kw">RECORD</span>
+    No : <span class="type">integer</span>; <span class="cite">[cite: 40]</span>
+    Kode : <span class="type">char</span>;
+    Juml : <span class="type">integer</span>;
+    Harga : <span class="type">real</span>;
+<span class="kw">END</span>;
+<span class="kw">VAR</span> p, q : x; <span class="cite">[cite: 41]</span>
+
+<span class="kw">BEGIN</span>
+  <span class="cmt">{ WITH p,q DO akan membaca variabel no, kode, juml, harga langsung }</span>
+  <span class="kw">WITH</span> p,q <span class="kw">DO</span> 
+    READ(no, kode, juml, harga); <span class="cite">[cite: 42]</span>
+
+  <span class="cmt">{ Bandingkan jika digunkaan cara TANPA WITH: }</span>
+  <span class="cmt">{ Read(p.no, p.kode, p.juml, p.harga, q.no, q.kode, q.juml, q.harga); }</span><span class="cite">[cite: 43]</span>
+<span class="kw">END</span>.</code></pre>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<script>
+    // Fungsi untuk mengatur perpindahan tab
+    function openTab(evt, tabId, groupClass) {
+        // Sembunyikan semua konten tab di dalam grup yang sama
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName(groupClass);
+        for (i = 0; i < tabcontent.length; i++) {
+            if(tabcontent[i].classList.contains('tab-content')){
+                tabcontent[i].style.display = "none";
+                tabcontent[i].classList.remove("active");
+            }
+        }
+
+        // Hapus kelas 'active' dari semua tombol di grup yang sama
+        var container = evt.currentTarget.parentElement;
+        tablinks = container.getElementsByClassName("tab-btn");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+
+        // Tampilkan tab saat ini dan tambahkan kelas 'active' ke tombol yang mengkliknya
+        document.getElementById(tabId).style.display = "block";
+        document.getElementById(tabId).classList.add("active");
+        evt.currentTarget.className += " active";
+    }
+</script>
+
+</body>
+</html>
